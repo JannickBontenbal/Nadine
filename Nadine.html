@@ -273,6 +273,7 @@
     z-index:1;
     width:100%;
     aspect-ratio:16/9;
+    border:0;
     background:#080503;
   }
   .watch__loader{
@@ -850,23 +851,27 @@
         <p class="watch__load-text">Loading movie</p>
         <div class="watch__loadbar" aria-hidden="true"><span></span></div>
       </div>
-      <video class="watch__video" id="moviePlayer" controls preload="metadata" playsinline poster="photos/nadine-02.png">
-        <source src="https://github.com/JannickBontenbal/nadine/releases/download/movie/Nadine.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
+      <iframe
+        class="watch__video"
+        id="moviePlayer"
+        src="https://www.youtube-nocookie.com/embed/NXGqD5q-RHI?rel=0&modestbranding=1&playsinline=1"
+        title="Nadine short film"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen></iframe>
     </div>
     <div class="watch__copy" data-reveal>
       <p class="eyebrow">Watch the Film</p>
-      <h2 class="watch__title">Play Nadine here, or keep a copy.</h2>
+      <h2 class="watch__title">Watch Nadine here.</h2>
       <p class="watch__text">
-        Stream the full movie in this page, or download the MP4 to watch it offline.
+        The full film is embedded privately through YouTube, so it loads reliably on mobile and desktop.
       </p>
       <p class="watch__error">
-        The movie file is still unavailable. Make sure the GitHub Release asset has finished uploading.
+        The YouTube player is taking longer than expected. Open the film on YouTube if it does not appear.
       </p>
       <div class="watch__actions">
-        <a class="watch__button watch__button--primary" href="#moviePlayer" id="playMovie">Play movie</a>
-        <a class="watch__button" href="https://github.com/JannickBontenbal/nadine/releases/download/movie/Nadine.mp4">Download MP4</a>
+        <a class="watch__button watch__button--primary" href="#moviePlayer" id="playMovie">Watch here</a>
+        <a class="watch__button" href="https://youtu.be/NXGqD5q-RHI" target="_blank" rel="noopener">Open YouTube</a>
       </div>
     </div>
   </div>
@@ -1013,26 +1018,17 @@
   var moviePlayer = document.getElementById('moviePlayer');
   var movieFrame = document.getElementById('movieFrame');
   if (moviePlayer && movieFrame) {
-    ['loadedmetadata', 'canplay', 'canplaythrough'].forEach(function(eventName){
-      moviePlayer.addEventListener(eventName, function(){
-        movieFrame.classList.add('is-ready');
-      });
-    });
-    moviePlayer.addEventListener('error', function(){
-      movieFrame.classList.add('is-error');
+    moviePlayer.addEventListener('load', function(){
+      movieFrame.classList.add('is-ready');
     });
     setTimeout(function(){
-      if (moviePlayer.readyState >= 1) movieFrame.classList.add('is-ready');
-    }, 900);
+      movieFrame.classList.add('is-ready');
+    }, 1800);
   }
   if (playMovie && moviePlayer) {
     playMovie.addEventListener('click', function(e){
       e.preventDefault();
       moviePlayer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      var playPromise = moviePlayer.play();
-      if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(function(){ moviePlayer.focus(); });
-      }
     });
   }
 

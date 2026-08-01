@@ -15,18 +15,8 @@ The gallery images live in `photos/` and are referenced with relative paths, so 
 
 ## Video
 
-The page streams and downloads the movie from this GitHub Release asset URL:
+The site embeds the unlisted YouTube upload:
 
-`https://github.com/JannickBontenbal/nadine/releases/download/movie/Nadine.mp4`
+`https://youtu.be/NXGqD5q-RHI`
 
-Upload the video through GitHub Releases:
-
-1. Go to the `nadine` repository on GitHub.
-2. Open **Releases**.
-3. Choose **Draft a new release**.
-4. Set **Tag** to `movie`.
-5. Set the release title to `Nadine movie`.
-6. Attach `Nadine.mp4`.
-7. Publish the release.
-
-After Render redeploys, the embedded player and download button will use that public release asset.
+The player uses YouTube's privacy-enhanced embed domain and includes a fallback link that opens the film directly on YouTube.
