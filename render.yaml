@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: nadine
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .

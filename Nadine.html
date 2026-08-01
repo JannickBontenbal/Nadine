@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nadine — Thank You for Watching</title>
+<meta name="description" content="A thank-you page for everyone who watched Nadine, with behind-the-scenes photos from the edit.">
+
+<!--
+  ============================================================
+  HOW TO ADD YOUR OWN PHOTOS
+  ============================================================
+  1. The Nadine screenshots are stored in the "photos" folder:
+       nadine-01.png through nadine-06.png
+     (landscape photos around 1200×900px work best — the
+     tiles crop to fit, so don't worry about exact size)
+  3. That's it — the placeholders below will be replaced by
+     your photos automatically. No other code needs to change.
+     Feel free to rewrite the captions/timecodes in the
+     <figcaption> tags to match your own photos.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --red: #e2061b;
+    --red-deep: #a30410;
+    --cream: #f7dec9;
+    --cream-deep: #efc9a3;
+    --cream-pale: #fff6ec;
+    --ink: #2a0e08;
+    --ink-soft: rgba(42,14,8,.68);
+    --serif: 'Fraunces', serif;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Inter', sans-serif;
+    --ease: cubic-bezier(.16,1,.3,1);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body.intro-lock{ overflow:hidden; height:100%; }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; }
+
+  ::selection{ background:var(--red); color:var(--cream-pale); }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--red-deep);
+    outline-offset:3px;
+  }
+
+  /* ---------- film grain overlay ---------- */
+  .grain{
+    position:fixed; inset:0; width:100%; height:100%;
+    pointer-events:none; z-index:50;
+    mix-blend-mode:multiply; opacity:.5;
+  }
+
+  /* ---------- layout helpers ---------- */
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 clamp(1.25rem, 5vw, 3.5rem);
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- reveal on scroll ---------- */
+  [data-reveal]{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .9s var(--ease), transform .9s var(--ease);
+  }
+  [data-reveal].is-in{ opacity:1; transform:none; }
+
+  /* ============================================================
+     INTRO / TITLE CARD (splash before entering the site)
+     ============================================================ */
+  .intro{
+    position:fixed;
+    inset:0;
+    z-index:40;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--red);
+    clip-path:circle(150% at 50% 50%);
+    transition:clip-path 1s var(--ease);
+  }
+  .intro--leaving{
+    clip-path:circle(0% at 50% 50%);
+    pointer-events:none;
+  }
+  .intro[hidden]{ display:none; }
+  .intro__inner{
+    text-align:center;
+    padding:2rem;
+  }
+  .intro__eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--cream-pale);
+    opacity:.8;
+    margin:0 0 .9rem;
+  }
+  .intro__title{
+    font-family:var(--serif);
+    font-weight:850;
+    font-style:normal;
+    text-transform:uppercase;
+    color:var(--cream-pale);
+    font-size:clamp(3.4rem,17vw,10.5rem);
+    line-height:.9;
+    letter-spacing:-.005em;
+    margin:0;
+    font-variation-settings:'opsz' 144,'SOFT' 0,'WONK' 0;
+  }
+  .intro__meta{
+    font-family:var(--serif);
+    font-style:italic;
+    font-weight:440;
+    color:var(--cream-pale);
+    opacity:.82;
+    font-size:clamp(1rem,2.6vw,1.3rem);
+    margin:.7rem 0 2.8rem;
+  }
+  .intro__enter{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.65rem;
+    text-decoration:none;
+    color:var(--cream-pale);
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    padding:.5rem;
+  }
+  .intro__play{
+    width:56px;
+    height:56px;
+    box-sizing:border-box;
+    padding:16px;
+    border-radius:50%;
+    background:var(--cream-pale);
+    color:var(--red-deep);
+    transition:transform .35s var(--ease);
+    animation:pulseSoft 2.6s ease-in-out infinite;
+  }
+  .intro__enter:hover .intro__play,
+  .intro__enter:focus-visible .intro__play{
+    transform:scale(1.08);
+    animation-play-state:paused;
+  }
+  @keyframes pulseSoft{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.06); }
+  }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero{
+    position:relative;
+    padding:clamp(3rem,9vw,6rem) 0 clamp(2.5rem,6vw,4rem);
+    overflow:hidden;
+  }
+  .hero__top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:1rem;
+  }
+  .leader{
+    color:var(--red);
+    opacity:.85;
+    flex:none;
+    width:clamp(46px,6vw,72px);
+    height:clamp(46px,6vw,72px);
+  }
+  .hero__title{
+    font-family:var(--serif);
+    color:var(--red);
+    margin:.6em 0 0;
+    line-height:.86;
+    letter-spacing:-.01em;
+  }
+  .hero__title-line{ display:block; }
+  .hero__title-line--thin{
+    font-weight:340;
+    font-style:normal;
+    font-size:clamp(2rem,6.6vw,3.6rem);
+    font-variation-settings:'opsz' 40,'SOFT' 0,'WONK' 0;
+  }
+  .hero__title-line--bold{
+    font-weight:600;
+    font-style:italic;
+    font-size:clamp(4.6rem,16vw,11.5rem);
+    font-variation-settings:'opsz' 144,'SOFT' 28,'WONK' 1;
+    margin-top:-.04em;
+  }
+  .hero__sub{
+    max-width:34ch;
+    margin:1.6em 0 0;
+    font-size:clamp(1.05rem,2vw,1.25rem);
+    line-height:1.55;
+    color:var(--ink);
+  }
+  .hero__cue{
+    display:inline-flex;
+    align-items:center;
+    gap:.5em;
+    margin-top:2.4rem;
+    font-family:var(--mono);
+    font-size:.75rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--red-deep);
+    text-decoration:none;
+    border-bottom:1px solid transparent;
+    transition:border-color .3s var(--ease), gap .3s var(--ease);
+  }
+  .hero__cue:hover{ border-color:var(--red-deep); gap:.75em; }
+
+  /* ============================================================
+     FILM STRIP DIVIDER (sprockets + marquee)
+     ============================================================ */
+  .filmstrip{ position:relative; }
+  .sprockets{
+    height:14px;
+    background-image:radial-gradient(circle, var(--cream-pale) 2.6px, transparent 3px);
+    background-size:24px 14px;
+    background-repeat:repeat-x;
+    background-position:center;
+    background-color:var(--red);
+  }
+  .marquee{
+    background:var(--red);
+    padding:.9rem 0;
+  }
+  .marquee p{
+    margin:0;
+    text-align:center;
+    font-family:var(--mono);
+    font-size:clamp(.7rem,1.6vw,.85rem);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--cream-pale);
+    padding:0 1rem;
+  }
+
+  /* ============================================================
+     BEHIND THE EDIT / GALLERY
+     ============================================================ */
+  .bts{
+    padding:clamp(3.5rem,9vw,6.5rem) 0 clamp(2rem,6vw,4rem);
+  }
+  .bts__head{
+    max-width:46ch;
+    margin-bottom:clamp(2.5rem,6vw,4rem);
+  }
+  .bts__title{
+    font-family:var(--serif);
+    font-style:italic;
+    font-weight:500;
+    font-variation-settings:'opsz' 90,'SOFT' 10,'WONK' 0;
+    color:var(--ink);
+    font-size:clamp(1.8rem,4.4vw,3rem);
+    line-height:1.12;
+    margin:.5em 0 .6em;
+  }
+  .bts__desc{
+    margin:0;
+    font-size:1.02rem;
+    line-height:1.65;
+    color:var(--ink-soft);
+  }
+
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    grid-auto-rows:170px;
+    grid-auto-flow:dense;
+    gap:clamp(.7rem,1.6vw,1.1rem);
+  }
+  .tile{ display:flex; flex-direction:column; }
+  .tile--big{ grid-column:span 2; grid-row:span 2; }
+  .tile--tall{ grid-row:span 2; }
+  .tile--wide{ grid-column:span 2; }
+
+  .tile__frame{
+    position:relative;
+    flex:1;
+    overflow:hidden;
+    background:var(--cream-deep);
+    border-radius:3px;
+  }
+  .tile__img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+  }
+  .tile__img--duo{
+    filter:url(#duotone);
+    opacity:1;
+  }
+  .tile__img--full{
+    opacity:0;
+    transition:opacity .55s var(--ease);
+  }
+  .tile:hover .tile__img--full,
+  .tile:focus-within .tile__img--full{ opacity:1; }
+
+  .tile--empty .tile__img{ display:none; }
+  .tile__placeholder{
+    display:none;
+    position:absolute; inset:0;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:.5rem;
+    text-align:center;
+    padding:1rem;
+    background:
+      repeating-linear-gradient(135deg, transparent 0 12px, rgba(226,6,27,.06) 12px 13px),
+      linear-gradient(160deg, var(--cream-deep), var(--cream));
+    color:var(--red-deep);
+  }
+  .tile--empty .tile__placeholder{ display:flex; }
+  .tile__placeholder svg{ width:26px; height:26px; opacity:.7; }
+  .tile__placeholder span{
+    font-family:var(--mono);
+    font-size:.68rem;
+    letter-spacing:.06em;
+    opacity:.75;
+  }
+
+  .tile figcaption{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:.6rem;
+    padding-top:.55rem;
+    font-family:var(--mono);
+  }
+  .tile__code{ font-size:.68rem; color:var(--red-deep); white-space:nowrap; }
+  .tile__cap{ font-size:.78rem; color:var(--ink-soft); text-align:right; }
+
+  @media (hover:none){
+    .tile__img--full{ opacity:1; }
+    .tile__img--duo{ opacity:0; }
+  }
+
+  @media (max-width:760px){
+    .gallery{ grid-template-columns:1fr; grid-auto-rows:auto; }
+    .tile,.tile--big,.tile--tall,.tile--wide{ grid-column:auto; grid-row:auto; }
+    .tile__frame{ aspect-ratio:4/3; }
+  }
+
+  /* ============================================================
+     OUTRO / CREDITS
+     ============================================================ */
+  .outro{
+    padding:clamp(4rem,10vw,7rem) 0 clamp(2.5rem,5vw,3.5rem);
+    text-align:center;
+  }
+  .outro__title{
+    font-family:var(--serif);
+    font-style:italic;
+    color:var(--red);
+    font-weight:560;
+    font-variation-settings:'opsz' 120,'SOFT' 22,'WONK' 1;
+    font-size:clamp(2.2rem,6vw,4.2rem);
+    line-height:1.08;
+    max-width:16ch;
+    margin:.5em auto .7em;
+  }
+  .outro__text{
+    max-width:42ch;
+    margin:0 auto;
+    font-size:1.02rem;
+    line-height:1.65;
+    color:var(--ink-soft);
+  }
+  .outro__credit{
+    margin:2.2rem auto 0;
+    font-family:var(--mono);
+    font-size:.78rem;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+  }
+  .outro__credit em{
+    font-style:normal;
+    border-bottom:1px dashed var(--red-deep);
+    color:var(--ink);
+    padding-bottom:1px;
+  }
+
+  footer.site-foot{
+    padding:2rem 0 2.6rem;
+    text-align:center;
+    font-family:var(--mono);
+    font-size:.68rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *,*::before,*::after{
+      transition-duration:.01ms !important;
+      animation-duration:.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- hidden SVG defs: duotone filter (red/cream) + film grain -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="duotone" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix"
+        values="0.2126 0.7152 0.0722 0 0
+                0.2126 0.7152 0.0722 0 0
+                0.2126 0.7152 0.0722 0 0
+                0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.8863 0.9686"/>
+        <feFuncG type="table" tableValues="0.0235 0.8706"/>
+        <feFuncB type="table" tableValues="0.1059 0.7882"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="grainFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="matrix"
+        values="0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0.05 0"/>
+    </filter>
+  </defs>
+</svg>
+
+<svg class="grain" aria-hidden="true"><rect width="100%" height="100%" filter="url(#grainFilter)"/></svg>
+
+<!-- ============================================================
+     INTRO / TITLE CARD
+     ============================================================ -->
+<div class="intro" id="intro">
+  <div class="intro__inner">
+    <p class="intro__eyebrow">You just watched</p>
+    <h1 class="intro__title">Nadine</h1>
+    <p class="intro__meta">a short film</p>
+    <a href="#site-top" class="intro__enter" id="introEnter">
+      <svg class="intro__play" viewBox="0 0 24 24" aria-hidden="true">
+        <polygon points="6,4 20,12 6,20" fill="currentColor"/>
+      </svg>
+      <span>Enter</span>
+    </a>
+  </div>
+</div>
+
+<div id="site">
+<span id="site-top"></span>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero__top">
+      <p class="eyebrow" data-reveal>Scene 01 · House Lights Up</p>
+      <svg class="leader" viewBox="0 0 120 120" aria-hidden="true" data-reveal>
+        <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="60" cy="60" r="2.2" fill="currentColor"/>
+        <g stroke="currentColor" stroke-width="1.5">
+          <line x1="60" y1="6" x2="60" y2="18"/>
+          <line x1="60" y1="102" x2="60" y2="114"/>
+          <line x1="6" y1="60" x2="18" y2="60"/>
+          <line x1="102" y1="60" x2="114" y2="60"/>
+          <line x1="21.3" y1="21.3" x2="29.8" y2="29.8"/>
+          <line x1="90.2" y1="90.2" x2="98.7" y2="98.7"/>
+          <line x1="98.7" y1="21.3" x2="90.2" y2="29.8"/>
+          <line x1="29.8" y1="90.2" x2="21.3" y2="98.7"/>
+        </g>
+        <text x="60" y="70" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="26" fill="currentColor">8</text>
+      </svg>
+    </div>
+
+    <h1 class="hero__title">
+      <span class="hero__title-line hero__title-line--thin" data-reveal>Thank</span>
+      <span class="hero__title-line hero__title-line--bold" data-reveal>you.</span>
+    </h1>
+
+    <p class="hero__sub" data-reveal>
+      For finding a seat, dimming the lights, and staying all the way through the credits.
+      That still means everything to us.
+    </p>
+
+    <a href="#behind-the-edit" class="hero__cue" data-reveal>What happened off-screen ↓</a>
+  </div>
+</header>
+
+<!-- ============================================================
+     FILM STRIP DIVIDER
+     ============================================================ -->
+<div class="filmstrip">
+  <div class="sprockets" aria-hidden="true"></div>
+  <div class="marquee">
+    <p>Thank you for watching &nbsp;●&nbsp; thank you for being there &nbsp;●&nbsp; thank you for watching &nbsp;●&nbsp; thank you for being there &nbsp;●</p>
+  </div>
+  <div class="sprockets" aria-hidden="true"></div>
+</div>
+
+<!-- ============================================================
+     BEHIND THE EDIT
+     ============================================================ -->
+<main>
+  <section class="bts" id="behind-the-edit">
+    <div class="wrap">
+      <div class="bts__head">
+        <p class="eyebrow" data-reveal>Behind the Edit</p>
+        <h2 class="bts__title" data-reveal>How the film came together, frame by frame.</h2>
+        <p class="bts__desc" data-reveal>
+          Every scene passed through hours of scrubbing, trimming, and re-trimming before
+          it found its rhythm. Here's the process behind the process — the timeline, the
+          late nights, the moment it finally clicked. Hover a frame to bring it into full colour.
+        </p>
+      </div>
+
+      <div class="gallery">
+
+        <figure class="tile tile--big" data-reveal>
+          <div class="tile__frame">
+            <img class="tile__img tile__img--duo" src="photos/nadine-01.png" alt="Behind the scenes: DaVinci Resolve colour page for Nadine" loading="lazy" onerror="this.closest('.tile').classList.add('tile--empty')">
+            <img class="tile__img tile__img--full" src="photos/nadine-01.png" alt="" aria-hidden="true" loading="lazy">
+            <div class="tile__placeholder" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.6-2.4a1 1 0 0 1 .84-.6h3.12a1 1 0 0 1 .84.6L16 6"/></svg>
+              <span>nadine-01.png</span>
+            </div>
+          </div>
+          <figcaption>
+            <span class="tile__code">01:06:09:17</span>
+            <span class="tile__cap">Colour page</span>
+          </figcaption>
+        </figure>
+
+        <figure class="tile" data-reveal>
+          <div class="tile__frame">
+            <img class="tile__img tile__img--duo" src="photos/nadine-02.png" alt="Behind the scenes: Nadine timeline in DaVinci Resolve" loading="lazy" onerror="this.closest('.tile').classList.add('tile--empty')">
+            <img class="tile__img tile__img--full" src="photos/nadine-02.png" alt="" aria-hidden="true" loading="lazy">
+            <div class="tile__placeholder" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.6-2.4a1 1 0 0 1 .84-.6h3.12a1 1 0 0 1 .84.6L16 6"/></svg>
+              <span>nadine-02.png</span>
+            </div>
+          </div>
+          <figcaption>
+            <span class="tile__code">01:04:28:23</span>
+            <span class="tile__cap">Timeline locked in</span>
+          </figcaption>
+        </figure>
+
+        <figure class="tile tile--tall" data-reveal>
+          <div class="tile__frame">
+            <img class="tile__img tile__img--duo" src="photos/nadine-03.png" alt="Behind the scenes: black and white still from Nadine" loading="lazy" onerror="this.closest('.tile').classList.add('tile--empty')">
+            <img class="tile__img tile__img--full" src="photos/nadine-03.png" alt="" aria-hidden="true" loading="lazy">
+            <div class="tile__placeholder" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.6-2.4a1 1 0 0 1 .84-.6h3.12a1 1 0 0 1 .84.6L16 6"/></svg>
+              <span>nadine-03.png</span>
+            </div>
+          </div>
+          <figcaption>
+            <span class="tile__code">02.2.1</span>
+            <span class="tile__cap">The close-up</span>
+          </figcaption>
+        </figure>
+
+        <figure class="tile tile--wide" data-reveal>
+          <div class="tile__frame">
+            <img class="tile__img tile__img--duo" src="photos/nadine-04.png" alt="Behind the scenes: black and white close-up from Nadine" loading="lazy" onerror="this.closest('.tile').classList.add('tile--empty')">
+            <img class="tile__img tile__img--full" src="photos/nadine-04.png" alt="" aria-hidden="true" loading="lazy">
+            <div class="tile__placeholder" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.6-2.4a1 1 0 0 1 .84-.6h3.12a1 1 0 0 1 .84.6L16 6"/></svg>
+              <span>nadine-04.png</span>
+            </div>
+          </div>
+          <figcaption>
+            <span class="tile__code">02.2.1</span>
+            <span class="tile__cap">Another quiet frame</span>
+          </figcaption>
+        </figure>
+
+        <figure class="tile" data-reveal>
+          <div class="tile__frame">
+            <img class="tile__img tile__img--duo" src="photos/nadine-05.png" alt="Behind the scenes: black and white still from Nadine" loading="lazy" onerror="this.closest('.tile').classList.add('tile--empty')">
+            <img class="tile__img tile__img--full" src="photos/nadine-05.png" alt="" aria-hidden="true" loading="lazy">
+            <div class="tile__placeholder" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.6-2.4a1 1 0 0 1 .84-.6h3.12a1 1 0 0 1 .84.6L16 6"/></svg>
+              <span>nadine-05.png</span>
+            </div>
+          </div>
+          <figcaption>
+            <span class="tile__code">01.3.1</span>
+            <span class="tile__cap">An exterior beat</span>
+          </figcaption>
+        </figure>
+
+        <figure class="tile" data-reveal>
+          <div class="tile__frame">
+            <img class="tile__img tile__img--duo" src="photos/nadine-06.png" alt="Behind the scenes: black and white still from Nadine" loading="lazy" onerror="this.closest('.tile').classList.add('tile--empty')">
+            <img class="tile__img tile__img--full" src="photos/nadine-06.png" alt="" aria-hidden="true" loading="lazy">
+            <div class="tile__placeholder" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.6-2.4a1 1 0 0 1 .84-.6h3.12a1 1 0 0 1 .84.6L16 6"/></svg>
+              <span>nadine-06.png</span>
+            </div>
+          </div>
+          <figcaption>
+            <span class="tile__code">02.2.1</span>
+            <span class="tile__cap">A final still</span>
+          </figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================================================
+     OUTRO / CREDITS
+     ============================================================ -->
+<footer class="outro">
+  <div class="wrap">
+    <p class="eyebrow" data-reveal>Roll Credits</p>
+    <h2 class="outro__title" data-reveal>See you at the next screening.</h2>
+    <p class="outro__text" data-reveal>
+      Thank you again — for the laughs, the quiet parts, and everything in between.
+      We couldn't have made this without you in the seats.
+    </p>
+    <p class="outro__credit" data-reveal>Made with love by <em>— Jannick,Joël,Latifa,Rhodé,Jasmijn,Lizz,Judah,Eva</em></p>
+  </div>
+</footer>
+
+<footer class="site-foot">
+  <span id="year"></span> &nbsp;·&nbsp; Fin
+</footer>
+
+</div><!-- /#site -->
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ---------- intro / title-card splash ---------- */
+  var intro = document.getElementById('intro');
+  var site = document.getElementById('site');
+  var introEnter = document.getElementById('introEnter');
+  var entered = false;
+
+  document.body.classList.add('intro-lock');
+  site.setAttribute('aria-hidden', 'true');
+  site.setAttribute('inert', '');
+
+  function enterSite(){
+    if (entered) return;
+    entered = true;
+
+    intro.classList.add('intro--leaving');
+    document.body.classList.remove('intro-lock');
+    site.removeAttribute('aria-hidden');
+    site.removeAttribute('inert');
+
+    var siteTop = document.getElementById('site-top');
+    if (siteTop) {
+      siteTop.setAttribute('tabindex', '-1');
+      siteTop.focus();
+    }
+
+    var finished = false;
+    function finish(){
+      if (finished) return;
+      finished = true;
+      intro.setAttribute('hidden', '');
+    }
+    intro.addEventListener('transitionend', finish, { once: true });
+    setTimeout(finish, 1200); // fallback in case transitionend doesn't fire
+  }
+
+  introEnter.addEventListener('click', function(e){
+    e.preventDefault();
+    enterSite();
+  });
+  intro.addEventListener('click', enterSite);
+  document.addEventListener('keydown', function(e){
+    if (!entered && (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape')) {
+      e.preventDefault();
+      enterSite();
+    }
+  });
+
+  /* ---------- scroll reveal ---------- */
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var targets = document.querySelectorAll('[data-reveal]');
+
+  if (reduced || !('IntersectionObserver' in window)) {
+    targets.forEach(function(el){ el.classList.add('is-in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    targets.forEach(function(el){ io.observe(el); });
+  }
+</script>
+
+</body>
+</html>

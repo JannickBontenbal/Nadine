@@ -1,0 +1,11 @@
+# Keep the Nadine repo focused on the hosted page.
+/Claude/
+/jiska.html
+/vintage_polaroid_camera.glb
+
+# Raw screenshots were normalized into /photos/nadine-*.png.
+/Schermafbeelding*.png
+
+# OS/editor noise.
+.DS_Store
+Thumbs.db
