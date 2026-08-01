@@ -6,6 +6,9 @@
 # Raw screenshots were normalized into /photos/nadine-*.png.
 /Schermafbeelding*.png
 
+# Keep the large movie out of the normal site push.
+/Nadine.mp4
+
 # OS/editor noise.
 .DS_Store
 Thumbs.db
