@@ -2,5 +2,5 @@ services:
   - type: web
     name: nadine
     runtime: static
-    buildCommand: git lfs install && git lfs pull
+    buildCommand: ""
     staticPublishPath: .

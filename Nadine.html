@@ -261,6 +261,7 @@
     align-items:center;
   }
   .watch__frame{
+    position:relative;
     overflow:hidden;
     border:1px solid rgba(255,246,236,.2);
     border-radius:6px;
@@ -268,9 +269,72 @@
     box-shadow:0 18px 55px rgba(0,0,0,.28);
   }
   .watch__video{
+    position:relative;
+    z-index:1;
     width:100%;
     aspect-ratio:16/9;
     background:#080503;
+  }
+  .watch__loader{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:1rem;
+    z-index:2;
+    padding:1.25rem;
+    background:
+      linear-gradient(180deg, rgba(8,5,3,.72), rgba(8,5,3,.88)),
+      radial-gradient(circle at 50% 35%, rgba(226,6,27,.26), transparent 42%);
+    color:var(--cream-pale);
+    text-align:center;
+    transition:opacity .35s var(--ease), visibility .35s var(--ease);
+  }
+  .watch__frame.is-ready .watch__loader,
+  .watch__frame.is-error .watch__loader{
+    opacity:0;
+    visibility:hidden;
+  }
+  .watch__load-text{
+    margin:0;
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:rgba(255,246,236,.82);
+  }
+  .watch__loadbar{
+    width:min(280px, 72%);
+    height:6px;
+    overflow:hidden;
+    border-radius:999px;
+    background:rgba(255,246,236,.18);
+  }
+  .watch__loadbar span{
+    display:block;
+    width:42%;
+    height:100%;
+    border-radius:inherit;
+    background:var(--cream-pale);
+    animation:videoLoad 1.15s ease-in-out infinite;
+  }
+  @keyframes videoLoad{
+    0%{ transform:translateX(-110%); }
+    100%{ transform:translateX(250%); }
+  }
+  .watch__error{
+    display:none;
+    margin:.85rem 0 0;
+    color:#ffd7d7;
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.04em;
+    line-height:1.5;
+  }
+  .watch__frame.is-error + .watch__copy .watch__error{
+    display:block;
   }
   .watch__title{
     font-family:var(--serif);
@@ -781,21 +845,28 @@
      ============================================================ -->
 <section class="watch" id="watch-film">
   <div class="wrap watch__grid">
-    <div class="watch__frame" data-reveal>
+    <div class="watch__frame" id="movieFrame" data-reveal>
+      <div class="watch__loader" aria-live="polite">
+        <p class="watch__load-text">Loading movie</p>
+        <div class="watch__loadbar" aria-hidden="true"><span></span></div>
+      </div>
       <video class="watch__video" id="moviePlayer" controls preload="metadata" playsinline poster="photos/nadine-02.png">
-        <source src="Nadine.mp4" type="video/mp4">
+        <source src="https://github.com/JannickBontenbal/nadine/releases/download/movie/Nadine.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
-    <div data-reveal>
+    <div class="watch__copy" data-reveal>
       <p class="eyebrow">Watch the Film</p>
       <h2 class="watch__title">Play Nadine here, or keep a copy.</h2>
       <p class="watch__text">
         Stream the full movie in this page, or download the MP4 to watch it offline.
       </p>
+      <p class="watch__error">
+        The movie file is still unavailable. Make sure the GitHub Release asset has finished uploading.
+      </p>
       <div class="watch__actions">
         <a class="watch__button watch__button--primary" href="#moviePlayer" id="playMovie">Play movie</a>
-        <a class="watch__button" href="Nadine.mp4" download>Download MP4</a>
+        <a class="watch__button" href="https://github.com/JannickBontenbal/nadine/releases/download/movie/Nadine.mp4">Download MP4</a>
       </div>
     </div>
   </div>
@@ -940,6 +1011,20 @@
 
   var playMovie = document.getElementById('playMovie');
   var moviePlayer = document.getElementById('moviePlayer');
+  var movieFrame = document.getElementById('movieFrame');
+  if (moviePlayer && movieFrame) {
+    ['loadedmetadata', 'canplay', 'canplaythrough'].forEach(function(eventName){
+      moviePlayer.addEventListener(eventName, function(){
+        movieFrame.classList.add('is-ready');
+      });
+    });
+    moviePlayer.addEventListener('error', function(){
+      movieFrame.classList.add('is-error');
+    });
+    setTimeout(function(){
+      if (moviePlayer.readyState >= 1) movieFrame.classList.add('is-ready');
+    }, 900);
+  }
   if (playMovie && moviePlayer) {
     playMovie.addEventListener('click', function(e){
       e.preventDefault();

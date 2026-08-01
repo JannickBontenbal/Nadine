@@ -7,7 +7,7 @@ Static thank-you page for the short film `Nadine`.
 Use this as a Render Static Site:
 
 - Root directory: leave empty
-- Build command: `git lfs install && git lfs pull`
+- Build command: leave empty
 - Publish directory / build output path: `.`
 - Root page: `index.html`
 
@@ -15,19 +15,18 @@ The gallery images live in `photos/` and are referenced with relative paths, so 
 
 ## Video
 
-The page expects the movie at:
+The page streams and downloads the movie from this GitHub Release asset URL:
 
-`Nadine.mp4`
+`https://github.com/JannickBontenbal/nadine/releases/download/movie/Nadine.mp4`
 
-The movie file is intentionally not included in the normal site push because it is about 794 MB. GitHub's browser upload and normal Git uploads are not suitable for a file that large.
+Upload the video through GitHub Releases:
 
-To upload the video through GitHub, use Git LFS from this folder:
+1. Go to the `nadine` repository on GitHub.
+2. Open **Releases**.
+3. Choose **Draft a new release**.
+4. Set **Tag** to `movie`.
+5. Set the release title to `Nadine movie`.
+6. Attach `Nadine.mp4`.
+7. Publish the release.
 
-```powershell
-git lfs install
-git add -f Nadine.mp4
-git commit -m "Add Nadine movie file"
-git push
-```
-
-Render is already configured to run `git lfs pull` during deploy, so after that push the video should become available to the embedded player and download button.
+After Render redeploys, the embedded player and download button will use that public release asset.
